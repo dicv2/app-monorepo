@@ -9,7 +9,6 @@ import coreChainApi from '@onekeyhq/core/src/instance/coreChainApi';
 import type { ISignedTxPro, IUnsignedTxPro } from '@onekeyhq/core/src/types';
 import { OneKeyInternalError } from '@onekeyhq/shared/src/errors';
 import { memoizee } from '@onekeyhq/shared/src/utils/cacheUtils';
-import hexUtils from '@onekeyhq/shared/src/utils/hexUtils';
 import timerUtils from '@onekeyhq/shared/src/utils/timerUtils';
 import type {
   IAddressValidation,
@@ -126,8 +125,8 @@ export default class Vault extends VaultBase {
     }
     const { to, amount, tokenInfo } = transferInfo;
     const account = await this.getAccount();
-    const recipient = hexUtils.addHexPrefix(to);
-    const sender = hexUtils.addHexPrefix(account.address);
+    const recipient = to;
+    const sender = account.address;
     if (
       !tokenInfo ||
       typeof tokenInfo.decimals !== 'number' ||

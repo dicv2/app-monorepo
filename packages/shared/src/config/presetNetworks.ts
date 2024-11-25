@@ -2530,14 +2530,14 @@ const alph: IServerNetwork = {
 
 const benfen: IServerNetwork = {
   'chainId': 'mainnet',
-  'code': 'benfen',
+  'code': 'bfc',
   'decimals': 9,
-  'id': 'benfen--mainnet',
-  'impl': 'benfen',
+  'id': 'bfc--mainnet',
+  'impl': 'bfc',
   'isTestnet': false,
   'logoURI': 'https://uni.onekey-asset.com/static/chain/bfc.png',
   'name': 'BEN FEN',
-  'shortcode': 'benfen',
+  'shortcode': 'bfc',
   'shortname': 'BFC',
   'symbol': 'BFC',
   'feeMeta': {

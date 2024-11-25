@@ -138,22 +138,19 @@ async function createTokenTransaction({
 }
 
 function analyzeTransactionType(tx: TransactionBlock) {
-  const commands = tx.serialize();
-  // TODO: analyze transaction type
-  console.log('analyze transaction type: ', tx);
-  throw new Error('Not implemented');
-  // const hasMoveCall = commands.some((cmd) => cmd.$kind === 'MoveCall');
-  // if (hasMoveCall) {
-  //   return ESuiTransactionType.ContractInteraction;
-  // }
+  const transactions = tx.blockData.transactions;
+  const hasMoveCall = transactions.some((i) => i.kind === 'MoveCall');
+  if (hasMoveCall) {
+    return EBfcTransactionType.ContractInteraction;
+  }
 
-  // const transferCommands = commands.filter(
-  //   (cmd) => cmd.$kind === 'TransferObjects',
-  // );
-  // if (transferCommands.length) {
-  //   return ESuiTransactionType.TokenTransfer;
-  // }
-  // return ESuiTransactionType.Unknown;
+  const transferCommands = transactions.filter(
+    (cmd) => cmd.kind === 'TransferObjects',
+  );
+  if (transferCommands.length) {
+    return EBfcTransactionType.TokenTransfer;
+  }
+  return EBfcTransactionType.Unknown;
 }
 
 interface ITransferDetail {
@@ -244,11 +241,13 @@ function parseTransferDetails({
 }
 
 function parseMoveCall(transaction: TransactionBlock) {
-  const tx = transaction.serialize();
-  if (!tx.length) {
+  if (!transaction.blockData.transactions?.length) {
     return null;
   }
-  // const firstMoveCallCommand = tx.commands.find((i) => i.$kind === 'MoveCall');
+  const transactions = transaction.blockData.transactions;
+  const firstMoveCallCommand = transactions.find((i) => i.kind === 'MoveCall');
+
+  throw new Error('Not implemented');
 
   // if (!firstMoveCallCommand?.MoveCall) {
   //   return null;
@@ -260,8 +259,6 @@ function parseMoveCall(transaction: TransactionBlock) {
   //   contractName: functionName,
   //   contractTo: `${moduleName}::${functionName}`,
   // };
-  // TODO: get commands from tx
-  throw new Error('Not implemented');
 }
 
 export default {
