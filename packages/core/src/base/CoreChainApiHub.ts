@@ -4,7 +4,7 @@ import CoreAllNetwork from '../chains/all';
 import CoreChainAlph from '../chains/alph';
 import CoreChainAptos from '../chains/aptos';
 import CoreChainBch from '../chains/bch';
-import CoreChainBenfen from '../chains/benfen';
+import CoreChainBfc from '../chains/bfc';
 import CoreChainBtc from '../chains/btc';
 import CoreChainCfx from '../chains/cfx';
 import CoreChainCkb from '../chains/ckb';
@@ -88,5 +88,5 @@ export class CoreChainApiHub {
 
   alph = new CoreChainAlph();
 
-  benfen = new CoreChainBenfen();
+  bfc = new CoreChainBfc();
 }

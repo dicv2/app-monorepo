@@ -1,6 +1,6 @@
 import type { ExecuteTransactionRequestType } from '@benfen/bfc.js/client';
 
-export type IEncodedTxBenfen = {
+export type IEncodedTxBfc = {
   rawTx: string;
   // TODO IFeeInfoUnit
   requestType?: ExecuteTransactionRequestType;

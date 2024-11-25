@@ -1,4 +1,4 @@
-import { IMPL_BENFEN } from '@onekeyhq/shared/src/engine/engineConsts';
+import { IMPL_BFC } from '@onekeyhq/shared/src/engine/engineConsts';
 
 import { CoreChainScopeBase } from '../../base/CoreChainScopeBase';
 
@@ -6,7 +6,7 @@ import type CoreChainHd from './CoreChainHd';
 import type CoreChainImported from './CoreChainImported';
 
 export default class extends CoreChainScopeBase {
-  override impl = IMPL_BENFEN;
+  override impl = IMPL_BFC;
 
   override hd: CoreChainHd = this._createApiProxy('hd') as CoreChainHd;
 
