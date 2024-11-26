@@ -2536,7 +2536,7 @@ const benfen: IServerNetwork = {
   'impl': 'bfc',
   'isTestnet': false,
   'logoURI': 'https://uni.onekey-asset.com/static/chain/bfc.png',
-  'name': 'BEN FEN',
+  'name': 'BenFen',
   'shortcode': 'bfc',
   'shortname': 'BFC',
   'symbol': 'BFC',
