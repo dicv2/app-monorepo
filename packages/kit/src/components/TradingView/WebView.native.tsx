@@ -4,13 +4,21 @@ import { Stack } from '@onekeyhq/components';
 
 import type { ViewStyle } from 'react-native';
 
-export function WebView({ uri, style }: { uri: string; style: ViewStyle }) {
+export function WebView({
+  uri,
+  style,
+  ...props
+}: {
+  uri: string;
+  style: ViewStyle;
+}) {
   return (
     <Stack style={style as any}>
       <NativeWebView
         source={{
           uri,
         }}
+        {...props}
       />
     </Stack>
   );

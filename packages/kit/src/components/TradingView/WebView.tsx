@@ -1,6 +1,10 @@
 import type { ViewStyle } from 'react-native';
+import type { WebViewProps } from 'react-native-webview';
 
-export function WebView({ uri, style }: { uri: string; style: ViewStyle }) {
+export function WebView({
+  uri,
+  style,
+}: { uri: string; style: ViewStyle } & WebViewProps) {
   return (
     <div style={style as any}>
       <iframe

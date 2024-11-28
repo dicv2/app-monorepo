@@ -133,7 +133,7 @@ function TradingViewChart({
   const handlePressIn = useCallback(() => {
     appEventBus.emit(
       EAppEventBusNames.ChangeTokenDetailTabVerticalScrollEnabled,
-      { enabled: true },
+      { enabled: false },
     );
   }, []);
 
@@ -141,25 +141,22 @@ function TradingViewChart({
     setTimeout(() => {
       appEventBus.emit(
         EAppEventBusNames.ChangeTokenDetailTabVerticalScrollEnabled,
-        { enabled: false },
+        { enabled: true },
       );
     }, 50);
   }, []);
   return (
-    <TouchableWithoutFeedback
-      onPressIn={handlePressIn}
-      onPressOut={handlePressOut}
-    >
-      <TradingView
-        mode="overview"
-        $gtMd={{ h: 450, pl: '$5' }}
-        $md={{ px: '$4', pt: '$6' }}
-        targetToken={targetToken}
-        baseToken={baseToken}
-        identifier={identifier}
-        h={353}
-      />
-    </TouchableWithoutFeedback>
+    <TradingView
+      mode="overview"
+      $gtMd={{ h: 450, pl: '$5' }}
+      $md={{ px: '$4', pt: '$6' }}
+      targetToken={targetToken}
+      baseToken={baseToken}
+      identifier={identifier}
+      h={353}
+      onTouchStart={handlePressIn}
+      onTouchEnd={handlePressOut}
+    />
   );
 }
 
