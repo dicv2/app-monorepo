@@ -128,7 +128,7 @@ function TradingViewChart({
   return (
     <TradingView
       mode="overview"
-      $gtMd={{ h: 450, pl: '$4' }}
+      $gtMd={{ h: 450, pl: '$5' }}
       $md={{ px: '$4', pt: '$6' }}
       targetToken={targetToken}
       baseToken={baseToken}
@@ -151,7 +151,7 @@ const identifiers = [
 ];
 
 enum EChartType {
-  tradingView = 'TradingView',
+  tradingView = 'Trading View',
   liteChart = 'Lite Chart',
 }
 
@@ -221,7 +221,7 @@ function BasicTokenPriceChart({ coinGeckoId, defer, tickers }: IChartProps) {
             gap="$1"
             ai="center"
             $md={{ mx: '$4' }}
-            $gtMd={{ pb: '$4', ml: '$4' }}
+            $gtMd={{ pb: '$4', ml: '$5' }}
           >
             <SizableText color="$textSubdued" size="$bodyMdMedium">
               {label}
@@ -234,7 +234,7 @@ function BasicTokenPriceChart({ coinGeckoId, defer, tickers }: IChartProps) {
           </XStack>
         )}
       />
-      {chartViewType === 'TradingView' ? (
+      {chartViewType === EChartType.tradingView ? (
         <TradingViewChart
           defer={defer}
           identifier={ticker?.identifier}
