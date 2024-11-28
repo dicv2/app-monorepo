@@ -238,7 +238,7 @@ function BasicTokenPriceChart({ coinGeckoId, defer, tickers }: IChartProps) {
   }
 
   return (
-    <YStack bg="red">
+    <YStack>
       <Select
         items={selectOptions}
         value={chartViewType}
