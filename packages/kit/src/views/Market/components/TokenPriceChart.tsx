@@ -1,6 +1,7 @@
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useIntl } from 'react-intl';
+import { TouchableWithoutFeedback } from 'react-native';
 
 import {
   Icon,
@@ -13,6 +14,10 @@ import {
   useMedia,
 } from '@onekeyhq/components';
 import type { ISegmentControlProps } from '@onekeyhq/components';
+import {
+  EAppEventBusNames,
+  appEventBus,
+} from '@onekeyhq/shared/src/eventBus/appEventBus';
 import { ETranslations } from '@onekeyhq/shared/src/locale';
 import platformEnv from '@onekeyhq/shared/src/platformEnv';
 import type {
@@ -125,16 +130,36 @@ function TradingViewChart({
   useEffect(() => {
     defer.resolve(null);
   }, [defer]);
+  const handlePressIn = useCallback(() => {
+    appEventBus.emit(
+      EAppEventBusNames.ChangeTokenDetailTabVerticalScrollEnabled,
+      { enabled: true },
+    );
+  }, []);
+
+  const handlePressOut = useCallback(() => {
+    setTimeout(() => {
+      appEventBus.emit(
+        EAppEventBusNames.ChangeTokenDetailTabVerticalScrollEnabled,
+        { enabled: false },
+      );
+    }, 50);
+  }, []);
   return (
-    <TradingView
-      mode="overview"
-      $gtMd={{ h: 450, pl: '$5' }}
-      $md={{ px: '$4', pt: '$6' }}
-      targetToken={targetToken}
-      baseToken={baseToken}
-      identifier={identifier}
-      h={353}
-    />
+    <TouchableWithoutFeedback
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
+    >
+      <TradingView
+        mode="overview"
+        $gtMd={{ h: 450, pl: '$5' }}
+        $md={{ px: '$4', pt: '$6' }}
+        targetToken={targetToken}
+        baseToken={baseToken}
+        identifier={identifier}
+        h={353}
+      />
+    </TouchableWithoutFeedback>
   );
 }
 

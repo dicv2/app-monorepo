@@ -15,6 +15,10 @@ import {
 } from '@onekeyhq/components';
 import type { ITabInstance } from '@onekeyhq/components/src/layouts/TabView/StickyTabComponent/types';
 import backgroundApiProxy from '@onekeyhq/kit/src/background/instance/backgroundApiProxy';
+import {
+  EAppEventBusNames,
+  appEventBus,
+} from '@onekeyhq/shared/src/eventBus/appEventBus';
 import { ETranslations } from '@onekeyhq/shared/src/locale';
 import platformEnv from '@onekeyhq/shared/src/platformEnv';
 import type {
@@ -175,13 +179,25 @@ function BasicTokenDetailTabs({
 
   const tabRef = useRef<ITabInstance | null>(null);
 
-  setTimeout(() => {
-    console.log('tabRef---', tabRef);
-    tabRef?.current?.setVerticalScrollEnabled(false);
-    setTimeout(() => {
-      tabRef?.current?.setVerticalScrollEnabled(true);
-    }, 3000);
-  }, 3000);
+  const changeTabVerticalScrollEnabled = useCallback(
+    ({ enabled }: { enabled: boolean }) => {
+      tabRef?.current?.setVerticalScrollEnabled(enabled);
+    },
+    [],
+  );
+  useEffect(() => {
+    appEventBus.on(
+      EAppEventBusNames.ChangeTokenDetailTabVerticalScrollEnabled,
+      changeTabVerticalScrollEnabled,
+    );
+    return () => {
+      appEventBus.off(
+        EAppEventBusNames.ChangeTokenDetailTabVerticalScrollEnabled,
+        changeTabVerticalScrollEnabled,
+      );
+    };
+  }, [changeTabVerticalScrollEnabled]);
+
   return (
     <Tab
       ref={tabRef}
