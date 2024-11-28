@@ -34,13 +34,18 @@ import type { ITradingViewProps } from '../../../components/TradingView';
 import type { IDeferredPromise } from '../../../hooks/useDeferredPromise';
 
 interface IChartProps {
+  renderSelectElement?: ReactElement;
   coinGeckoId: string;
   symbol?: string;
   defer: IDeferredPromise<unknown>;
   tickers?: IMarketDetailTicker[];
 }
 
-function NativeTokenPriceChart({ coinGeckoId, defer }: IChartProps) {
+function NativeTokenPriceChart({
+  coinGeckoId,
+  defer,
+  renderSelectElement,
+}: IChartProps) {
   const intl = useIntl();
   const [points, setPoints] = useState<IMarketTokenChart>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -93,29 +98,40 @@ function NativeTokenPriceChart({ coinGeckoId, defer }: IChartProps) {
   }, [init]);
   const { gtLg } = useMedia();
   return (
-    <YStack px="$5" $gtMd={{ pr: platformEnv.isNative ? '$5' : 0 }}>
-      <YStack h={platformEnv.isNative ? 240 : 326} $gtMd={{ h: 294 }}>
-        <PriceChart isFetching={isLoading} data={points}>
-          {gtLg && !isLoading ? (
-            <SegmentControl
-              value={days}
-              onChange={setDays as ISegmentControlProps['onChange']}
-              options={options}
-            />
-          ) : null}
-        </PriceChart>
+    <>
+      <YStack px="$5" $gtMd={{ pr: platformEnv.isNative ? '$5' : 0 }}>
+        <YStack h={platformEnv.isNative ? 240 : 326} $gtMd={{ h: 294 }}>
+          <PriceChart isFetching={isLoading} data={points}>
+            {gtLg && !isLoading ? (
+              <SegmentControl
+                value={days}
+                onChange={setDays as ISegmentControlProps['onChange']}
+                options={options}
+              />
+            ) : null}
+          </PriceChart>
+        </YStack>
       </YStack>
       {gtLg ? null : (
-        <Stack mt={platformEnv.isNative ? -28 : '$5'}>
+        <XStack
+          mt={platformEnv.isNative ? -28 : '$5'}
+          gap="$3"
+          ai="center"
+          px="$1"
+          pr="$5"
+        >
+          {renderSelectElement}
           <SegmentControl
-            fullWidth
+            fullWidth={!renderSelectElement}
             value={days}
+            jc="space-between"
+            flex={1}
             onChange={setDays as ISegmentControlProps['onChange']}
             options={options}
           />
-        </Stack>
+        </XStack>
       )}
-    </YStack>
+    </>
   );
 }
 
@@ -190,10 +206,10 @@ const resolveIdentifierName = (name: string) => {
   }
   return name;
 };
-const { gtLg } = useMedia();
 function BasicTokenPriceChart({ coinGeckoId, defer, tickers }: IChartProps) {
   const [chartViewType, setChartViewType] = useState(EChartType.tradingView);
   const intl = useIntl();
+  const { gtLg } = useMedia();
   const ticker = useMemo(() => {
     if (!tickers?.length) {
       return null;
@@ -234,6 +250,49 @@ function BasicTokenPriceChart({ coinGeckoId, defer, tickers }: IChartProps) {
     [intl],
   );
 
+  const selectElement = useMemo(
+    () =>
+      ticker ? (
+        <Select
+          items={selectOptions}
+          value={chartViewType}
+          onChange={setChartViewType}
+          title={intl.formatMessage({ id: ETranslations.market_chart })}
+          renderTrigger={({ label }) => (
+            <XStack
+              gap="$1"
+              ai="center"
+              $md={{ mx: '$4' }}
+              $gtMd={{ pb: '$4', ml: '$5' }}
+            >
+              <SizableText color="$textSubdued" size="$bodyMdMedium">
+                {label}
+              </SizableText>
+              <Icon
+                size="$5"
+                name="ChevronDownSmallOutline"
+                color="$iconSubdued"
+              />
+            </XStack>
+          )}
+        />
+      ) : null,
+    [chartViewType, intl, selectOptions, ticker],
+  );
+
+  const tradingViewChartElement = useMemo(
+    () =>
+      ticker ? (
+        <TradingViewChart
+          defer={defer}
+          identifier={ticker?.identifier}
+          baseToken={ticker?.baseToken}
+          targetToken={ticker?.targetToken}
+        />
+      ) : null,
+    [defer, ticker],
+  );
+
   const content = useMemo(() => {
     if (!ticker) {
       return null;
@@ -241,45 +300,41 @@ function BasicTokenPriceChart({ coinGeckoId, defer, tickers }: IChartProps) {
     if (gtLg) {
       return (
         <>
-          (
-          <Select
-            items={selectOptions}
-            value={chartViewType}
-            onChange={setChartViewType}
-            title={intl.formatMessage({ id: ETranslations.market_chart })}
-            renderTrigger={({ label }) => (
-              <XStack
-                gap="$1"
-                ai="center"
-                $md={{ mx: '$4' }}
-                $gtMd={{ pb: '$4', ml: '$5' }}
-              >
-                <SizableText color="$textSubdued" size="$bodyMdMedium">
-                  {label}
-                </SizableText>
-                <Icon
-                  size="$5"
-                  name="ChevronDownSmallOutline"
-                  color="$iconSubdued"
-                />
-              </XStack>
-            )}
-          />
-          );
+          {selectElement}
           {chartViewType === EChartType.tradingView ? (
-            <TradingViewChart
-              defer={defer}
-              identifier={ticker?.identifier}
-              baseToken={ticker?.baseToken}
-              targetToken={ticker?.targetToken}
-            />
+            tradingViewChartElement
           ) : (
             <NativeTokenPriceChart coinGeckoId={coinGeckoId} defer={defer} />
           )}
         </>
       );
     }
-  }, [chartViewType, coinGeckoId, defer, intl, selectOptions, ticker]);
+
+    return (
+      <>
+        {chartViewType === EChartType.tradingView ? (
+          <YStack>
+            {tradingViewChartElement}
+            <YStack pt="$3">{selectElement}</YStack>
+          </YStack>
+        ) : (
+          <NativeTokenPriceChart
+            coinGeckoId={coinGeckoId}
+            defer={defer}
+            renderSelectElement={selectElement}
+          />
+        )}
+      </>
+    );
+  }, [
+    chartViewType,
+    coinGeckoId,
+    defer,
+    gtLg,
+    selectElement,
+    ticker,
+    tradingViewChartElement,
+  ]);
 
   if (!ticker) {
     return <NativeTokenPriceChart coinGeckoId={coinGeckoId} defer={defer} />;
