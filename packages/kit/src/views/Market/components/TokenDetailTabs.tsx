@@ -1,5 +1,5 @@
 import type { ReactElement } from 'react';
-import { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useIntl } from 'react-intl';
 
@@ -13,6 +13,7 @@ import {
   YStack,
   useMedia,
 } from '@onekeyhq/components';
+import type { ITabInstance } from '@onekeyhq/components/src/layouts/TabView/StickyTabComponent/types';
 import backgroundApiProxy from '@onekeyhq/kit/src/background/instance/backgroundApiProxy';
 import { ETranslations } from '@onekeyhq/shared/src/locale';
 import platformEnv from '@onekeyhq/shared/src/platformEnv';
@@ -171,8 +172,19 @@ function BasicTokenDetailTabs({
         : [],
     [intl, md, pools, token],
   );
+
+  const tabRef = useRef<ITabInstance | null>(null);
+
+  setTimeout(() => {
+    console.log('tabRef---', tabRef);
+    tabRef?.current?.setVerticalScrollEnabled(false);
+    setTimeout(() => {
+      tabRef?.current?.setVerticalScrollEnabled(true);
+    }, 3000);
+  }, 3000);
   return (
     <Tab
+      ref={tabRef}
       refreshControl={
         <RefreshControl refreshing={!!isRefreshing} onRefresh={onRefresh} />
       }
