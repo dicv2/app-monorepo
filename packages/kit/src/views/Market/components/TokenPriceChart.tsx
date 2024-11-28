@@ -128,7 +128,7 @@ function TradingViewChart({
   return (
     <TradingView
       mode="overview"
-      $gtMd={{ h: 450 }}
+      $gtMd={{ h: 450, pl: '$4' }}
       $md={{ px: '$4', pt: '$6' }}
       targetToken={targetToken}
       baseToken={baseToken}
@@ -210,7 +210,12 @@ function BasicTokenPriceChart({ coinGeckoId, defer, tickers }: IChartProps) {
         onChange={setChartViewType}
         title="Chart"
         renderTrigger={({ label }) => (
-          <XStack gap="$1" ai="center" $md={{ mx: '$4' }} $gtMd={{ pb: '$4' }}>
+          <XStack
+            gap="$1"
+            ai="center"
+            $md={{ mx: '$4' }}
+            $gtMd={{ pb: '$4', ml: '$4' }}
+          >
             <SizableText color="$textSubdued" size="$bodyMdMedium">
               {label}
             </SizableText>
