@@ -61,7 +61,7 @@ export const useTradingViewUri = (
       'show_popup_button': 'false',
       'autosize': 'true',
       'symbol': `${identifier.toUpperCase()}:${baseToken.toUpperCase()}${targetToken.toUpperCase()}`,
-      'interval': 'D',
+      'interval': '60',
       'timezone': timezone,
       'theme': theme,
       'style': '1',
@@ -76,9 +76,6 @@ export const useTradingViewUri = (
       'support_host': 'https://www.tradingview.com',
       'isTransparent': 'true',
     };
-    if (theme === 'dark') {
-      params.backgroundColor = 'rgba(27, 27, 27, 1)';
-    }
     return `https://www.tradingview-widget.com/embed-widget/advanced-chart/?t=${Date.now()}&locale=${locale}#${JSON.stringify(
       params,
     )}`;
