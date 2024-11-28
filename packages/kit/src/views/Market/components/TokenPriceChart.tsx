@@ -128,7 +128,13 @@ function TradingViewChart({
   defer: IDeferredPromise<unknown>;
 }) {
   useEffect(() => {
-    defer.resolve(null);
+    if (platformEnv.isNativeAndroid) {
+      setTimeout(() => {
+        defer.resolve(null);
+      }, 450);
+    } else {
+      defer.resolve(null);
+    }
   }, [defer]);
   const handlePressIn = useCallback(() => {
     appEventBus.emit(
@@ -232,12 +238,12 @@ function BasicTokenPriceChart({ coinGeckoId, defer, tickers }: IChartProps) {
   }
 
   return (
-    <YStack>
-      {/* <Select
+    <YStack bg="red">
+      <Select
         items={selectOptions}
         value={chartViewType}
         onChange={setChartViewType}
-        title="Chart"
+        title={intl.formatMessage({ id: ETranslations.market_chart })}
         renderTrigger={({ label }) => (
           <XStack
             gap="$1"
@@ -265,13 +271,7 @@ function BasicTokenPriceChart({ coinGeckoId, defer, tickers }: IChartProps) {
         />
       ) : (
         <NativeTokenPriceChart coinGeckoId={coinGeckoId} defer={defer} />
-      )} */}
-      <TradingViewChart
-        defer={defer}
-        identifier={ticker?.identifier}
-        baseToken={ticker?.baseToken}
-        targetToken={ticker?.targetToken}
-      />
+      )}
     </YStack>
   );
 }
