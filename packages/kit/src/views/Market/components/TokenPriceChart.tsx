@@ -164,6 +164,7 @@ const resolveIdentifierName = (name: string) => {
 };
 function BasicTokenPriceChart({ coinGeckoId, defer, tickers }: IChartProps) {
   const [chartViewType, setChartViewType] = useState(EChartType.tradingView);
+  const intl = useIntl();
   const ticker = useMemo(() => {
     if (!tickers?.length) {
       return null;
@@ -190,22 +191,28 @@ function BasicTokenPriceChart({ coinGeckoId, defer, tickers }: IChartProps) {
     }
   }, [tickers]);
 
+  const selectOptions = useMemo(
+    () => [
+      {
+        value: EChartType.tradingView,
+        label: EChartType.tradingView,
+      },
+      {
+        value: EChartType.liteChart,
+        label: intl.formatMessage({ id: ETranslations.market_lite_chart }),
+      },
+    ],
+    [intl],
+  );
+
   if (!ticker) {
     return <NativeTokenPriceChart coinGeckoId={coinGeckoId} defer={defer} />;
   }
+
   return (
     <YStack>
       <Select
-        items={[
-          {
-            value: EChartType.tradingView,
-            label: EChartType.tradingView,
-          },
-          {
-            value: EChartType.liteChart,
-            label: EChartType.liteChart,
-          },
-        ]}
+        items={selectOptions}
         value={chartViewType}
         onChange={setChartViewType}
         title="Chart"
