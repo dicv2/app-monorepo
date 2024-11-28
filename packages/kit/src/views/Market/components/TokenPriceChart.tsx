@@ -233,7 +233,7 @@ function BasicTokenPriceChart({ coinGeckoId, defer, tickers }: IChartProps) {
 
   return (
     <YStack>
-      <Select
+      {/* <Select
         items={selectOptions}
         value={chartViewType}
         onChange={setChartViewType}
@@ -265,7 +265,13 @@ function BasicTokenPriceChart({ coinGeckoId, defer, tickers }: IChartProps) {
         />
       ) : (
         <NativeTokenPriceChart coinGeckoId={coinGeckoId} defer={defer} />
-      )}
+      )} */}
+      <TradingViewChart
+        defer={defer}
+        identifier={ticker?.identifier}
+        baseToken={ticker?.baseToken}
+        targetToken={ticker?.targetToken}
+      />
     </YStack>
   );
 }
